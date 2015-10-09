@@ -1,4 +1,4 @@
-package LibreTaxi;
+/*package LibreTaxi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,4 +15,4 @@ public class LibreTaxiApplicationTests {
 	public void contextLoads() {
 	}
 
-}
+}*/

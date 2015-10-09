@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.test</groupId>
+	<groupId>Taxi.Libre</groupId>
 	<artifactId>LibreTaxi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.09</version>
 	<packaging>war</packaging>
 
 	<name>LibreTaxi</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Service de taxi</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,6 +43,19 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-security</artifactId>
+    	</dependency>
+		<dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.directory.server</groupId>
+        	<artifactId>apacheds-server-jndi</artifactId>
+        	<version>1.5.5</version>
+    	</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -55,6 +68,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+            <artifactId>maven-eclipse-plugin</artifactId>
+            <configuration>
+                <wtpversion>1.5</wtpversion>
+            </configuration>
+        </plugin>
 		</plugins>
 	</build>
 	
