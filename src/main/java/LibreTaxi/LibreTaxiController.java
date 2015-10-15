@@ -22,10 +22,10 @@ class LibreTaxiController {
     private final AtomicLong counter = new AtomicLong();
     private static Map<String, String> mesUtilisateurs = new HashMap<String, String>();
     
-	/*@RequestMapping("/")
+	@RequestMapping("/")
 	public String index() {
 		return "Greetings from Spring Boot!";
-	}*/
+	}
 	
 	@RequestMapping("/salutations")
     public Salutations salutations(@RequestParam(value="name", defaultValue="World") String name) {
@@ -52,6 +52,7 @@ class LibreTaxiController {
 		}
 	}
 	
+	// Inscription
 	@RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<String> update(@RequestBody Utilisateur utilisateur) {
 		
@@ -69,5 +70,34 @@ class LibreTaxiController {
 		}
 		
 		return new ResponseEntity<String>(String.format(templateSuccess, utilisateur.getNomUtilisateur()), HttpStatus.CREATED);
+	}
+	
+	// Authetification (login)
+	/*@RequestMapping(value = "/", method = RequestMethod.GET, consumes = "application/json")
+	public ResponseEntity<String> login(@RequestBody Utilisateur utilisateur) {
+		
+		if (mesUtilisateurs.get(utilisateur.getNomUtilisateur()) != null &&
+			mesUtilisateurs.get(utilisateur.getNomUtilisateur()).equals(utilisateur.getMotDePasse())){
+			
+			// Ouvrir une session
+			return new ResponseEntity<String>(String.format(templateSuccess, utilisateur.getNomUtilisateur()), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(String.format(templateFailure, utilisateur.getNomUtilisateur()), HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+		}
+		
+	}*/
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET, consumes = "application/json")
+	public ResponseEntity<String> login(@RequestBody Login login) {
+		
+		if (mesUtilisateurs.get(login.getNomUtilisateur()) != null &&
+			mesUtilisateurs.get(login.getNomUtilisateur()).equals(login.getMotDePasse())){
+			
+			// Ouvrir une session
+			return new ResponseEntity<String>(String.format(templateSuccess, login.getNomUtilisateur()), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(String.format(templateFailure, login.getNomUtilisateur()), HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+		}
+		
 	}
 }
