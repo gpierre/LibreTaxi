@@ -22,7 +22,7 @@ public class Utilisateur {
 		this.motDePasse = motDePasse;
 	}*/
 	
-	public Utilisateur(@JsonProperty("nomUtilisateur") String nomUtilisateur,@JsonProperty("motDePasse") String motDePasse,@JsonProperty("type") String type,@JsonProperty("nom") String nom,@JsonProperty("prenom") String prenom,@JsonProperty("telephone") String telephone,@JsonProperty("courriel") String courriel){
+	public Utilisateur(@JsonProperty("nomUtilisateur") String nomUtilisateur,@JsonProperty("motDePasse") String motDePasse,@JsonProperty("type") String type,@JsonProperty("nom") String nom,@JsonProperty("prenom") String prenom,@JsonProperty("telephone") String telephone){
 		this.type = type;
 		this.nomUtilisateur = nomUtilisateur;
 		this.motDePasse = motDePasse;
