@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import LibreTaxi.commande.Commande;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import LibreTaxi.commande.Position;
+import LibreTaxi.commande.UpdateChauffeur;
 
 @RestController
 class LibreTaxiController {
@@ -30,19 +30,39 @@ class LibreTaxiController {
 	
     private final AtomicLong counter = new AtomicLong();
     private static Map<String, String> mesUtilisateurs = new HashMap<String, String>();
-    private static ArrayList<Utilisateur> clients = new ArrayList<Utilisateur>();
-    private static ArrayList<Utilisateur> chauffeurs = new ArrayList<Utilisateur>();
+    private static ArrayList<Client> clients = new ArrayList<Client>();
+    private static ArrayList<Chauffeur> chauffeurs = new ArrayList<Chauffeur>();
     
     @PostConstruct
     public void init() {
-    	mesUtilisateurs.put("Chauffeur", "chauffeur");
-    	mesUtilisateurs.put("Client", "client");
-    	Utilisateur client = new Utilisateur("Client","client","client","client","cli","1234567890");
-    	clients.add(client);
+    	
+    	mesUtilisateurs.put("test1@gmail.com", "clie");
+    	clients.add(new Client("test1@gmail.com","clie","client","client","cli","1234567890"));
     	counter.incrementAndGet();
-    	Utilisateur chauffeur = new Utilisateur("Chauffeur","chauffeur","chauffeur","chauffeur","chau","1234567890");
-    	chauffeurs.add(chauffeur);
+    	mesUtilisateurs.put("a@b.c", "1234");
+    	clients.add(new Client("a@b.c","1234","client","client","cli","1234567890"));
     	counter.incrementAndGet();
+    	long mat = 1234567890;
+    	for (int i = 0; i < 10 ; i++){
+    		mesUtilisateurs.put(String.valueOf(mat), "chau");
+	    	Chauffeur chauffeur = new Chauffeur(Long.toString(mat) ,"chauffeur","chauffeur","chauffeur","chau",String.valueOf(mat));
+	    	chauffeur.setDisponible(true);
+	    	chauffeurs.add(chauffeur);
+	    	counter.incrementAndGet();
+	    	mat++;
+    	}
+    	
+    	// Il faut ajouter quelques chauffeurs avec position
+    	// UQAM "latitude":"45.50866","longitude":"-73.56849"
+    	chauffeurs.get(0).setPostition(new Position(-73.56849, 45.50866));
+    	// Chez moi 45.58801	-73.67693
+    	chauffeurs.get(1).setPostition(new Position(-73.67693, 45.58801));
+    	// Place Desjardins 45.50737	-73.56410
+    	chauffeurs.get(2).setPostition(new Position(-73.56410, 45.50737));
+    	// Schwartz's Deli 45.52352	-73.57850
+    	chauffeurs.get(3).setPostition(new Position(-73.57850, 45.52352));
+    	// Place Versailles 45.59110	-73.53916
+    	chauffeurs.get(4).setPostition(new Position(-73.53916, 45.59110));
     }
     
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -60,12 +80,14 @@ class LibreTaxiController {
 		if (utilisateur.getType().equalsIgnoreCase("client")){
 			// sauvegarder un client
 			mesUtilisateurs.put(utilisateur.getNomUtilisateur(), utilisateur.getMotDePasse());
-			clients.add(utilisateur);
+			Client client = new Client(utilisateur);
+			clients.add(client);
 			
 		} else if (utilisateur.getType().equalsIgnoreCase("chauffeur")){
 			// sauvegarder un chauffeur
 			mesUtilisateurs.put(utilisateur.getNomUtilisateur(), utilisateur.getMotDePasse());
-			chauffeurs.add(utilisateur);
+			Chauffeur chauffeur = new Chauffeur(utilisateur);
+			chauffeurs.add(chauffeur);
 		} else {
 			return new ResponseEntity<String>(String.format(templateFailureType, utilisateur.getNomUtilisateur()), HttpStatus.BAD_REQUEST); 
 		}
@@ -91,6 +113,31 @@ class LibreTaxiController {
 	
 	@RequestMapping(value="/commande", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<String> commande(@RequestBody Commande commande){
-		return new ResponseEntity<String>("blabla", HttpStatus.BAD_REQUEST);
+		
+		// Traiter la commande
+		//     Trouver le chauffeur le plus près
+		//     Retourner le temps estimé d'arriver dans la réponse
+		//     Il doit y avoir des exceptions: service non disponible dans le secteur demandé, n'est pas un client, 
+		return new ResponseEntity<String>("blabla", HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/chauffeur", method = RequestMethod.PUT, consumes = "application/json")
+	public ResponseEntity<String> miseAjourChauffeur(@RequestBody UpdateChauffeur update){
+		
+		// Retrouver le chauffeur et le mettre à jour
+		if (mesUtilisateurs.containsKey(update.getNomUtilisateur()) 
+				&& mesUtilisateurs.get(update.getNomUtilisateur()).equalsIgnoreCase(update.getMotDePasse())){
+			for (Chauffeur chauffeur : chauffeurs){
+				if (update.getNomUtilisateur().equalsIgnoreCase(chauffeur.getNomUtilisateur())){
+					
+					chauffeur.setDisponible(update.isDisponible());
+					chauffeur.setPostition(update.getPos());
+					return new ResponseEntity<String>("J'ai reçu la mise à jour!", HttpStatus.ACCEPTED);
+				}
+			}
+			return new ResponseEntity<String>("utilisateur inconnu!", HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+		} else {
+			return new ResponseEntity<String>("utilisateur inconnu!", HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+		}
 	}
 }
