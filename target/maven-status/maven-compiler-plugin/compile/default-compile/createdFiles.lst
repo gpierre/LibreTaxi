@@ -1,7 +1,11 @@
+LibreTaxi/UtilitairesMaps.class
+LibreTaxi/LoginID.class
+LibreTaxi/commande/UpdateChauffeur.class
 LibreTaxi/ServletInitializer.class
 LibreTaxi/Chauffeur.class
-LibreTaxi/Salutations.class
+LibreTaxi/commande/Position.class
 LibreTaxi/LibreTaxiController.class
 LibreTaxi/Client.class
 LibreTaxi/Utilisateur.class
+LibreTaxi/commande/Commande.class
 LibreTaxi/LibreTaxiApplication.class
